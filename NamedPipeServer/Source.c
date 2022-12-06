@@ -48,6 +48,7 @@ int main()
 	DWORD size_buffer = SIZE_BUFFER;
 	LPWSTR buffer = (CHAR*)calloc(size_buffer, sizeof(CHAR));
 	char message[SIZE_BUFFER];
+	char rez[11] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.'};
 	BOOL Connected;
 	DWORD actual_readen;
 	BOOL SuccessRead;
@@ -60,24 +61,25 @@ int main()
 			SuccessRead = ReadFile(hNamedPipe, buffer, size_buffer, &actual_readen, NULL);
 			if (SuccessRead)
 			{
+
 				printf("\nКлиент ввёл число: ");
 				printf(buffer);
-				if (scanf_s(buffer, '%s') != 1)
+				float num = atof(buffer);
+				if (num == 0)
 				{
-					scanf_s("Вы ввели не корректные данные", &message);
+					sprintf(message, "Вы ввели не корректные данные");
 					buffer = &message;
 					WriteFile(hNamedPipe, buffer, size_buffer, &actual_readen, NULL);
-					CloseHandle(hNamedPipe);
 				}
 				else 
 				{
-					float num = atof(buffer);
 					float pow = num * num;
 					sprintf(message, "%f", pow);
 					buffer = &message;
 					printf("\n");
 					WriteFile(hNamedPipe, buffer, size_buffer, &actual_readen, NULL);
-				}				
+				}
+				
 			}
 		}
 		else
